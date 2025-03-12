@@ -1,37 +1,32 @@
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
+-- Variables
+local waveNumber = 1
+local enemiesPerWave = 5
+local spawnDelay = 2 -- Delay between each enemy spawn
+local waveDelay = 10 -- Delay between each wave
+local enemyPrefab = game.ServerStorage.Enemy -- The enemy to spawn
+local spawnPoints = workspace.SpawnPoints:GetChildren() -- Assumes spawn points are in a folder named SpawnPoints
 
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
+-- Function to spawn enemies
+local function spawnWave()
+    for i = 1, enemiesPerWave do
+        local spawnPoint = spawnPoints[math.random(1, #spawnPoints)]
+        local enemy = enemyPrefab:Clone()
+        enemy.CFrame = spawnPoint.CFrame
+        enemy.Parent = workspace
+        wait(spawnDelay)
+    end
+end
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
+-- Function to start the next wave
+local function startNextWave()
+    while true do
+        print("Starting wave " .. waveNumber)
+        spawnWave()
+        waveNumber = waveNumber + 1
+        enemiesPerWave = enemiesPerWave + 2 -- Increase enemies per wave
+        wait(waveDelay)
+    end
+end
 
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+-- Start the first wave
+startNextWave()
