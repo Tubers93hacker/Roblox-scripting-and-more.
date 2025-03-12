@@ -1,0 +1,13 @@
+-- Function to set player health
+local function setPlayerHealth(player, healthValue)
+    if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+        player.Character.Humanoid.Health = healthValue
+    end
+end
+
+-- Example usage: Set the health of the player to 100
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        setPlayerHealth(player, 100)
+    end)
+end)
