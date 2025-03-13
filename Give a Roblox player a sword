@@ -1,0 +1,23 @@
+-- Function to give a player a sword
+local function givePlayerSword(player)
+    local sword = Instance.new("Tool")
+    sword.Name = "Sword"
+    sword.RequiresHandle = true
+
+    local handle = Instance.new("Part")
+    handle.Name = "Handle"
+    handle.Size = Vector3.new(1, 5, 1)
+    handle.BrickColor = BrickColor.new("Really black")
+    handle.Anchored = false
+    handle.CanCollide = false
+    handle.Parent = sword
+
+    sword.Parent = player.Backpack
+end
+
+-- Example usage: Give sword to players when they join
+game.Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        givePlayerSword(player)
+    end)
+end)
