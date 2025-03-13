@@ -1,0 +1,19 @@
+-- Create a leaderboard when a player joins the game
+game.Players.PlayerAdded:Connect(function(player)
+    -- Create a leaderstats folder
+    local leaderstats = Instance.new("Folder")
+    leaderstats.Name = "leaderstats"
+    leaderstats.Parent = player
+    
+    -- Create a points value
+    local points = Instance.new("IntValue")
+    points.Name = "Points"
+    points.Value = 0 -- Initial points value
+    points.Parent = leaderstats
+    
+    -- Create a coins value
+    local coins = Instance.new("IntValue")
+    coins.Name = "Coins"
+    coins.Value = 0 -- Initial coins value
+    coins.Parent = leaderstats
+end)
