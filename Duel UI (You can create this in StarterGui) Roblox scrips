@@ -1,0 +1,35 @@
+-- Create this in StarterGui with buttons: InviteButton and AcceptButton
+
+local DuelUI = Instance.new("ScreenGui")
+local InviteButton = Instance.new("TextButton")
+local AcceptButton = Instance.new("TextButton")
+
+-- Properties for the UI
+DuelUI.Name = "DuelUI"
+DuelUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+InviteButton.Parent = DuelUI
+InviteButton.Position = UDim2.new(0.5, -50, 0.5, -25)
+InviteButton.Size = UDim2.new(0, 100, 0, 50)
+InviteButton.Text = "Invite Duel"
+
+AcceptButton.Parent = DuelUI
+AcceptButton.Position = UDim2.new(0.5, -50, 0.5, 25)
+AcceptButton.Size = UDim2.new(0, 100, 0, 50)
+AcceptButton.Text = "Accept Duel"
+AcceptButton.Visible = false  -- Only show when invited
+
+-- Setup scripts
+local player = game.Players.LocalPlayer
+local duelRequestEvent = game.ReplicatedStorage:WaitForChild("DuelRequest")
+
+-- Handle duel invitation acceptance
+AcceptButton.MouseButton1Click:Connect(function()
+    duelRequestEvent:FireServer(player)
+    AcceptButton.Visible = false
+end)
+
+-- Listen for duel invitations
+game.ReplicatedStorage:WaitForChild("DuelRequest").OnClientEvent:Connect(function(sender)
+    AcceptButton.Visible = true
+end)
