@@ -1,0 +1,29 @@
+-- Place this in ServerScriptService
+local Players = game:GetService("Players")
+
+-- A simple list to track active duels
+local activeDuels = {}
+
+-- Function to challenge a player
+game.ReplicatedStorage.DuelRequest.OnServerEvent:Connect(function(player, targetPlayer)
+    if activeDuels[player] or activeDuels[targetPlayer] then
+        -- Either player is already in a duel
+        return
+    end
+    
+    activeDuels[player] = targetPlayer
+    activeDuels[targetPlayer] = player
+    
+    -- Notify both players that a duel request has been made
+    targetPlayer:Kick("You have been invited to a duel!")
+end)
+
+-- End the duel after combat
+game.ReplicatedStorage.EndDuel.OnServerEvent:Connect(function(winner, loser)
+    -- Reset duel state
+    activeDuels[winner] = nil
+    activeDuels[loser] = nil
+    -- Fire victory to player
+    winner:SendMessage("Victory!")
+    loser:SendMessage("Defeat!")
+end)
