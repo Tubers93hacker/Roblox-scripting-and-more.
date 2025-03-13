@@ -1,0 +1,70 @@
+-- Avatar Customization Script
+
+-- Create a ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AvatarCustomizationGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create a Frame for the customization menu
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0.4, 0, 0.6, 0)
+frame.Position = UDim2.new(0.3, 0, 0.2, 0)
+frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+frame.Parent = screenGui
+
+-- Create a TextLabel for the menu title
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0.1, 0)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.Text = "Avatar Customization"
+titleLabel.Parent = frame
+
+-- Create a scrolling frame for items
+local scrollingFrame = Instance.new("ScrollingFrame")
+scrollingFrame.Size = UDim2.new(1, 0, 0.9, 0)
+scrollingFrame.Position = UDim2.new(0, 0, 0.1, 0)
+scrollingFrame.CanvasSize = UDim2.new(0, 0, 2, 0)
+scrollingFrame.ScrollBarThickness = 10
+scrollingFrame.Parent = frame
+
+-- Function to create a button for an item
+local function createItemButton(itemName, itemId, itemType)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.9, 0, 0.1, 0)
+    button.Position = UDim2.new(0.05, 0, #scrollingFrame:GetChildren() * 0.1, 0)
+    button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Text = itemName
+    button.Parent = scrollingFrame
+
+    button.MouseButton1Click:Connect(function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+
+        if itemType == "Clothing" then
+            local shirt = Instance.new("Shirt")
+            shirt.ShirtTemplate = "rbxassetid://"..itemId
+            shirt.Parent = character
+        elseif itemType == "Accessory" then
+            local accessory = Instance.new("Accessory")
+            accessory.AttachmentPoint = CFrame.new()
+            accessory.Name = itemName
+            accessory.Parent = character
+        elseif itemType == "Animation" then
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                local animation = Instance.new("Animation")
+                animation.AnimationId = "rbxassetid://"..itemId
+                local animationTrack = humanoid:LoadAnimation(animation)
+                animationTrack:Play()
+            end
+        end
+    end)
+end
+
+-- Example items
+createItemButton("Cool Shirt", "1234567890", "Clothing")
+createItemButton("Awesome Hat", "0987654321", "Accessory")
+createItemButton("Dance Animation", "1122334455", "Animation")
