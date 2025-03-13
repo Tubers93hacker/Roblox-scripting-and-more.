@@ -1,0 +1,65 @@
+-- In StarterGui, create a "DuelUI" ScreenGui with buttons: "InviteButton" and "AcceptButton"
+-- We'll use a local script for sending and accepting duel invitations
+
+local player = game.Players.LocalPlayer
+local duelUI = script.Parent
+local inviteButton = duelUI.InviteButton
+local acceptButton = duelUI.AcceptButton
+local duelPartner = nil
+local duelOngoing = false
+
+-- Show the invitation UI
+function showDuelInvitation(targetPlayer)
+    duelPartner = targetPlayer
+    duelUI.Visible = true
+end
+
+-- Invite a player to duel
+inviteButton.MouseButton1Click:Connect(function()
+    local targetPlayer = game.Players:FindFirstChild("PlayerName")  -- Replace with target player logic
+    if targetPlayer then
+        showDuelInvitation(targetPlayer)
+    end
+end)
+
+-- Accept the duel invitation
+acceptButton.MouseButton1Click:Connect(function()
+    if duelPartner then
+        startDuel(player, duelPartner)
+    end
+end)
+
+-- Function to start the duel
+function startDuel(player1, player2)
+    duelOngoing = true
+    duelUI.Visible = false
+    -- Countdown for duel start
+    local countdown = 5
+    while countdown > 0 do
+        -- Display countdown (you can make it part of UI for better feedback)
+        print(countdown)  
+        wait(1)
+        countdown = countdown - 1
+    end
+    
+    -- Start PvP battle (more details needed)
+    battle(player1, player2)
+end
+
+-- Function to handle the battle
+function battle(player1, player2)
+    -- In a real PvP, you would implement combat mechanics, health, etc.
+    local winner = math.random(1, 2) == 1 and player1 or player2
+    endDuel(winner)
+end
+
+-- End duel and show winner
+function endDuel(winner)
+    duelOngoing = false
+    -- Show victory/defeat screens (this is simplified)
+    if winner == player then
+        print("You Win!")
+    else
+        print("You Lose!")
+    end
+end
