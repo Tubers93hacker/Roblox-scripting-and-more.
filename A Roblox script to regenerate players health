@@ -1,0 +1,21 @@
+-- Function to regenerate player's health
+local function regenerateHealth(player)
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            while humanoid.Health < humanoid.MaxHealth do
+                humanoid.Health = humanoid.Health + 1 -- Increase health by 1
+                wait(1) -- Wait 1 second before next increment
+            end
+        end
+    end
+end
+
+-- Connect the function to the PlayerAdded event
+game.Players.PlayerAdded:Connect(function(player)
+    -- Connect the function to the CharacterAdded event
+    player.CharacterAdded:Connect(function()
+        regenerateHealth(player)
+    end)
+end)
