@@ -1,0 +1,14 @@
+local sword = script.Parent -- Assuming this script is a child of the sword object
+
+local damage = 25 -- Amount of damage the sword deals
+
+local function onTouch(hit)
+    local character = hit.Parent
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    
+    if humanoid then
+        humanoid:TakeDamage(damage)
+    end
+end
+
+sword.Touched:Connect(onTouch)
