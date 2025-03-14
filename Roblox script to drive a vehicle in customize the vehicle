@@ -1,0 +1,105 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Create a RemoteEvent for entering/exiting vehicles
+local EnterVehicleEvent = Instance.new("RemoteEvent")
+EnterVehicleEvent.Name = "EnterVehicleEvent"
+EnterVehicleEvent.Parent = ReplicatedStorage
+
+-- Function to handle entering a vehicle
+local function enterVehicle(player, vehicle)
+    if vehicle and vehicle:IsA("Model") then
+        local seat = vehicle:FindFirstChildOfClass("VehicleSeat")
+        if seat then
+            seat:Sit(player.Character.Humanoid)
+        end
+    end
+end
+
+-- Listen for the EnterVehicleEvent
+EnterVehicleEvent.OnServerEvent:Connect(enterVehicle)
+
+-- GUI button to enter a vehicle
+local function createEnterVehicleButton()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    local button = Instance.new("TextButton")
+    button.Text = "Enter Vehicle"
+    button.Size = UDim2.new(0.2, 0, 0.1, 0)
+    button.Position = UDim2.new(0.4, 0, 0.45, 0)
+    button.Parent = screenGui
+
+    button.MouseButton1Click:Connect(function()
+        -- Assuming a vehicle named "Car" exists in the workspace
+        local vehicle = workspace:FindFirstChild("Car")
+        if vehicle then
+            ReplicatedStorage.EnterVehicleEvent:FireServer(vehicle)
+        end
+    end)
+end
+
+Players.LocalPlayer.CharacterAdded:Connect(createEnterVehicleButton)
+Vehicle Customization
+
+-- Create a RemoteEvent for customizing vehicles
+local CustomizeVehicleEvent = Instance.new("RemoteEvent")
+CustomizeVehicleEvent.Name = "CustomizeVehicleEvent"
+CustomizeVehicleEvent.Parent = ReplicatedStorage
+
+-- Function to handle vehicle customization
+local function customizeVehicle(player, vehicle, customizationType, value)
+    if vehicle and vehicle:IsA("Model") then
+        if customizationType == "Color" then
+            for _, part in pairs(vehicle:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.Color = Color3.fromRGB(value.R, value.G, value.B)
+                end
+            end
+        elseif customizationType == "Texture" then
+            for _, part in pairs(vehicle:GetChildren()) do
+                if part:IsA("BasePart") then
+                    local decal = part:FindFirstChildOfClass("Decal") or Instance.new("Decal", part)
+                    decal.Texture = value
+                end
+            end
+        end
+    end
+end
+
+-- Listen for the CustomizeVehicleEvent
+CustomizeVehicleEvent.OnServerEvent:Connect(customizeVehicle)
+
+-- GUI buttons to customize the vehicle
+local function createCustomizeVehicleButtons()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+    local colorButton = Instance.new("TextButton")
+    colorButton.Text = "Change Color"
+    colorButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+    colorButton.Position = UDim2.new(0.4, 0, 0.55, 0)
+    colorButton.Parent = screenGui
+
+    colorButton.MouseButton1Click:Connect(function()
+        local vehicle = workspace:FindFirstChild("Car")
+        if vehicle then
+            ReplicatedStorage.CustomizeVehicleEvent:FireServer(vehicle, "Color", {R = 255, G = 0, B = 0})
+        end
+    end)
+
+    local textureButton = Instance.new("TextButton")
+    textureButton.Text = "Change Texture"
+    textureButton.Size = UDim2.new(0.2, 0, 0.1, 0)
+    textureButton.Position = UDim2.new(0.4, 0, 0.65, 0)
+    textureButton.Parent = screenGui
+
+    textureButton.MouseButton1Click:Connect(function()
+        local vehicle = workspace:FindFirstChild("Car")
+        if vehicle then
+            ReplicatedStorage.CustomizeVehicleEvent:FireServer(vehicle, "Texture", "rbxassetid://123456789")
+        end
+    end)
+end
+
+Players.LocalPlayer.CharacterAdded:Connect(createCustomizeVehicleButtons)
