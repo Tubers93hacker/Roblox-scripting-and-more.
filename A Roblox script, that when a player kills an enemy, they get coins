@@ -1,0 +1,34 @@
+local Players = game:GetService("Players")
+
+local function onEnemyKilled(player, enemy)
+    if player and player:IsA("Player") then
+        local leaderstats = player:FindFirstChild("leaderstats")
+        if leaderstats then
+            local coins = leaderstats:FindFirstChild("Coins")
+            if coins then
+                coins.Value = coins.Value + 10 -- Add 10 coins for each enemy killed
+            end
+        end
+    end
+end
+
+local function onCharacterAdded(character)
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Died:Connect(function()
+            local killer = humanoid:FindFirstChild("creator")
+            if killer and killer.Value then
+                local player = Players:GetPlayerFromCharacter(killer.Value)
+                if player then
+                    onEnemyKilled(player, character)
+                end
+            end
+        end)
+    end
+end
+
+local function onPlayerAdded(player)
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
+
+Players.PlayerAdded:Connect(onPlayerAdded)
