@@ -1,0 +1,24 @@
+-- Create a ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create a button
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0.5, -100, 0.5, -25)
+button.Text = "Explode All Players"
+button.Parent = screenGui
+
+-- Function to explode all players
+local function explodeAllPlayers()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local explosion = Instance.new("Explosion")
+            explosion.Position = player.Character.HumanoidRootPart.Position
+            explosion.Parent = workspace
+        end
+    end
+end
+
+-- Connect the button to the function
+button.MouseButton1Click:Connect(explodeAllPlayers)
