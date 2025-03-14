@@ -1,0 +1,13 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Assuming you have a gun model stored in ReplicatedStorage
+local gunTemplate = ReplicatedStorage:WaitForChild("GunTemplate")
+
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function(character)
+        -- Clone the gun template and parent it to the player's backpack
+        local gun = gunTemplate:Clone()
+        gun.Parent = player:WaitForChild("Backpack")
+    end)
+end)
