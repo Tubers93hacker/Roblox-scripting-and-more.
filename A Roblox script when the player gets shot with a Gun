@@ -1,0 +1,26 @@
+-- Create a tool and assign it to the player
+local Tool = Instance.new("Tool")
+Tool.Name = "Gun"
+Tool.RequiresHandle = true
+
+-- Create a handle for the tool
+local Handle = Instance.new("Part")
+Handle.Name = "Handle"
+Handle.Size = Vector3.new(1, 1, 1)
+Handle.CanCollide = false
+Handle.Parent = Tool
+
+-- Function to handle the shooting
+local function onActivated()
+    local character = Tool.Parent
+    local humanoid = character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid:TakeDamage(25)
+    end
+end
+
+-- Connect the function to the Activated event
+Tool.Activated:Connect(onActivated)
+
+-- Add the tool to the player's backpack
+Tool.Parent = game.Players.LocalPlayer.Backpack
